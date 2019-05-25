@@ -7,7 +7,7 @@ using std::string;
 
 class ZabbixSender
 {
-    ZabbixSender(string serverHost, int serverPort);
+    ZabbixSender(const string& serverHost, int serverPort);
     ~ZabbixSender();
 
     /**

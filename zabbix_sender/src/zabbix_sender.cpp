@@ -15,7 +15,7 @@ using std::string;
 const char header[] = { 'Z', 'B', 'X', 'D', '\1' };
 const string request = "sender data";
 
-ZabbixSender::ZabbixSender(string serverHost, int serverPort)
+ZabbixSender::ZabbixSender(const string& serverHost, int serverPort)
 {
     this->m_serverHost = serverHost;
     this->m_serverPort = serverPort;
@@ -26,7 +26,7 @@ ZabbixSender::~ZabbixSender()
 
 }
 
-int sendZabbixReport(string servHost, int servPort, ptree& sendData, string& errMsg)
+int sendZabbixReport(const string& servHost, int servPort, const ptree& sendData, string& errMsg)
 {
     // init socket
     boost::asio::io_service ioServ;
@@ -58,7 +58,7 @@ int sendZabbixReport(string servHost, int servPort, ptree& sendData, string& err
 
     // assemble send buffer
     uint64_t dataLen = reqStr.size();
-    int sendBuffLen = 5 + 8 + dataLen;
+    uint64_t sendBuffLen = 5 + 8 + dataLen;
     char* sendBuff = new char[sendBuffLen];
     memset(sendBuff, 0, sendBuffLen);
     memcpy(sendBuff, header, 5);
