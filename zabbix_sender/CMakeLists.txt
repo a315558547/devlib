@@ -9,6 +9,11 @@ add_definitions(
         -Wno-deprecated -Woverloaded-virtual -Wwrite-strings
 )
 
+include_directories(include)
+include_directories(../../boost_1_63_0)
+
+link_directories(../../boost_1_63_0/stage/lib)
+
 aux_source_directory(src DIR_SRCS)
 
 add_library(zabbix_sender ${DIR_SRCS})
