@@ -109,8 +109,37 @@ int sendZabbixReport(const string& servHost, int servPort, const ptree& sendData
 
     // parse response
     ptree rspJson;
-    std::stringstream iStream(string(recvBuff, dataLen));
-    boost::property_tree::read_json(iStream, rspJson);
+    std::stringstream rspSteam(std::string(recvBuff, (uint32_t)dataLen));
+    read_json(rspSteam, rspJson);
+    auto rspText = rspJson.get_child_optional("response");
+    if (rspText)
+    {
+        std::cout << rspText->data() << std::endl;
+    }
+
+    auto rspInfo = rspJson.get_child_optional("info");
+    if (rspInfo)
+    {
+        std::string rspStr = rspInfo->data();
+        std::vector<std::string> resultArray;
+        boost::split(resultArray, rspStr, boost::is_any_of(";"));
+
+        for (std::vector<std::string>::iterator resultIter = resultArray.begin();
+             resultIter != resultArray.end(); resultIter++)
+        {
+            std::vector<std::string> detailInfos;
+            boost::split(detailInfos, *resultIter, boost::is_any_of(":"));
+
+            if (detailInfos.size() == 2)
+            {
+                if (boost::trim_copy(detailInfos[0]) == "failed")
+                {
+                    int failCount = atoi(detailInfos[1].c_str());
+                    std::cout << failCount << std::endl;
+                }
+            }
+        }
+    }
 
     delete recvBuff;
 
